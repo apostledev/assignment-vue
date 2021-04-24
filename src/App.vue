@@ -1,11 +1,20 @@
 <template>
-  <h1 class="bg-green-500 text-white p-3 text-4xl text-center">Work In Progress</h1>
+  <div class="flex flex-col w-full h-full p-4 overflow-hidden bg-white rounded-2xl">
+    <div class="flex -m-4 pb-8 text-[#057fe9]">
+      <tab-link path="/">Home</tab-link>
+      <tab-link path="/users">Gebruikers</tab-link>
+      <tab-link path="/teams">Teams</tab-link>
+    </div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import TabLink from "./Components/TabLink.vue";
 
 export default defineComponent({
-  name: 'App'
+  name: 'App',
+  components: { TabLink }
 })
 </script>
