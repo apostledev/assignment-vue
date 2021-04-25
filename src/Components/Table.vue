@@ -1,17 +1,30 @@
 <template>
-    <div class="flex flex-col w-full h-full space-y-5" v-if="indexPage && indexPage.total > 0">
-        <div class="flex-grow flex-shrink h-0 overflow-scroll">
+    <div class="flex flex-col justify-between w-full h-full overflow-scroll" v-if="indexPage && indexPage.total > 0">
+        <div class="overflow-scroll">
             <div 
                 v-for="(row, i) in indexPage.data" 
                 :key="row.id"
-                class="px-3 py-3 "
+                class="w-full"
                 :class="{'border-b border-gray-200' : i < indexPage.data.length - 1}">
-                <span>{{row.name}}</span>
+                <slot :item="row"></slot>
             </div>
         </div>
-
-        <div class="flex justify-center space-x-1 text-sm">
-            <div 
+        <div class="flex justify-center mt-3 space-x-1 text-sm" v-if="minimalPagination">
+            <div
+                class="px-2 py-1 text-center text-gray-600 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
+                :class="{'bg-blue-200 text-blue-500 cursor-default hover:bg-blue-200' : indexPage.links[0].active}"
+                @click="paginateTo(indexPage.links[0].url)"
+                v-html="indexPage.links[0].label">
+            </div>
+            <div
+                class="px-2 py-1 text-center text-gray-600 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
+                :class="{'bg-blue-200 text-blue-500 cursor-default hover:bg-blue-200' : indexPage.links[indexPage.links.length - 1].active}"
+                @click="paginateTo(indexPage.links[indexPage.links.length - 1].url)"
+                v-html="indexPage.links[indexPage.links.length - 1].label">
+            </div>
+        </div>
+        <div class="flex justify-center mt-3 space-x-1 text-sm" v-if="!minimalPagination">
+            <div
                 v-for="(link, i) in indexPage.links" :key="i"
                 class="px-2 py-1 text-center text-gray-600 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
                 :class="{'bg-blue-200 text-blue-500 cursor-default hover:bg-blue-200' : link.active}"
@@ -28,10 +41,19 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from 'vue'
-import useJsonFetch from "./../../Fragments/useJsonFetch";
+import useJsonFetch from "./../Fragments/useJsonFetch";
 
 export default defineComponent({
-    props: ['indexUrl'],
+    props: {
+        indexUrl: {
+            type: String,
+            required: true
+        },
+        minimalPagination: {
+            type: Boolean,
+            default: false
+        }
+    },
     setup(props){
 
         const { jsonFetch } = useJsonFetch();
@@ -53,14 +75,9 @@ export default defineComponent({
         
         return {
             indexPage,
-            paginateTo
+            paginateTo,
+            minimalPagination: props.minimalPagination
         }
     }
 })
 </script>
-
-<style scoped>
-input:focus-visible{
-    outline-width: 0px;
-}
-</style>
