@@ -6,7 +6,7 @@
                 :key="row.id"
                 class="w-full"
                 :class="{'border-b border-gray-200' : i < indexPage.data.length - 1}">
-                <slot :deleteRow="deleteRow" :row="row"></slot>
+                <slot :item="row"></slot>
             </div>
         </div>
         <div class="flex justify-center mt-3 space-x-1 text-sm" v-if="minimalPagination">
@@ -40,8 +40,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, Ref, ref, watch } from 'vue'
-import useJsonFetch from "./../Fragments/useJsonFetch";
+import { defineComponent, onMounted, ref, watch } from 'vue'
+import useJsonFetch from "./../../Fragments/useJsonFetch";
 
 export default defineComponent({
     props: {
@@ -56,9 +56,9 @@ export default defineComponent({
     },
     setup(props){
 
-        const { jsonGet, jsonDelete } = useJsonFetch();
+        const { jsonGet } = useJsonFetch();
 
-        let indexPage: Ref<any> = ref(null);
+        let indexPage = ref(null);
         let currentPage = ref(1);
 
         const loadIndexPage = async () => {
@@ -72,23 +72,11 @@ export default defineComponent({
             if (url === null) return;
             currentPage.value = parseInt(url.split("page=").pop()!);
         }
-
-        const deleteRow = async (id: string) => {
-
-            const deleteConfirm = confirm("Are you sure you want to delete this row?");
-
-            if (deleteConfirm){
-                await jsonDelete(`${props.indexUrl}/${id}`);
-                indexPage.value.data = indexPage.value.data.filter((x: any) => x.id !== id);
-            }
-
-        }
         
         return {
             indexPage,
             paginateTo,
-            minimalPagination: props.minimalPagination,
-            deleteRow
+            minimalPagination: props.minimalPagination
         }
     }
 })

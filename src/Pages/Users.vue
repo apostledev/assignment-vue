@@ -1,8 +1,8 @@
 <template>
     <div class="p-4 overflow-scroll">
         <data-table indexUrl="/user">
-            <template v-slot:default="slotProps">
-                <div class="px-3 py-3">{{ slotProps.item.name }}</div>
+            <template v-slot="{ row }">
+                <div class="px-3 py-3">{{ row.name }}</div>
             </template>
         </data-table>   
     </div>
