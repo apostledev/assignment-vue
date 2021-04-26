@@ -1,8 +1,18 @@
 <template>
     <div class="flex flex-col items-start h-full p-4 space-y-5 overflow-scroll">
         <div class="flex flex-col w-1/3 mb-4">
-            <label class="text-xs tracking-wide text-gray-500 uppercase">Name:</label>
-            <input v-model="name" type="text" class="w-full px-2 py-2 bg-gray-100 border border-gray-300 rounded">
+            <label 
+                class="text-xs tracking-wide text-gray-500 uppercase"
+                :class="{'text-red-500' : name.error !== null}">
+                Name:
+            </label>
+            <input 
+                v-model="name.value" 
+                @keypress="name.error = null" 
+                type="text" 
+                class="w-full px-2 py-2 bg-gray-100 border border-gray-300 rounded"
+                :class="{'border-red-500' : name.error !== null}">
+            <span class="text-xs italic text-red-400" v-if="name.error !== null">{{name.error}}</span>
         </div>
 
         <div class="flex w-full h-full overflow-scroll">
@@ -50,7 +60,8 @@ export default defineComponent({
         const router = useRouter()
         const { jsonPost } = useJsonFetch();
 
-        const name: Ref<string> = ref("");
+        const name: Ref<{value: string, error: null|string}> = ref({'value' : '', 'error' : null});
+
         const selectedUsers: Ref<any[]> = ref([]);
 
         const isUserSelected = (user: any) => {
@@ -67,24 +78,24 @@ export default defineComponent({
 
         const save = async () => {
 
-            if (name.value.trim() === ""){
-                // TODO: show error to user
-                return;
-            }
-
-            let team = await jsonPost("/team", {
-                "name" : name.value
+            let teamResp = await jsonPost("/team", {
+                "name" : name.value.value
             });
 
+            if ("errors" in teamResp){
+                if ('name' in teamResp.errors) name.value.error = teamResp.errors.name[0];
+                throw new Error("Validation failed");
+            }
+            
             for(const user of selectedUsers.value){
                 await jsonPost("/membership", {
-                    "team_id" : team.id,
+                    "team_id" : teamResp.id,
                     "user_id" : user.id,
                 });
             }
 
             router.replace("/teams");
-
+            
         }
 
         return { name, toggle, selectedUsers, isUserSelected, save }

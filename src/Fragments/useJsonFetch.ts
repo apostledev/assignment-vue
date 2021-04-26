@@ -17,7 +17,10 @@ export default function useJsonFetch(){
 
         const req = await fetch(BASE_API_URL + url, {
             method: "POST",
-            body: formData
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
         });
 
         return await req.json();
