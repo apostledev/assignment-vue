@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 overflow-scroll">
+    <div class="h-full p-4 overflow-scroll">
         <data-table indexUrl="/user">
             <template v-slot="{ row }">
                 <div class="px-3 py-3">{{ row.name }}</div>

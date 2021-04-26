@@ -7,9 +7,11 @@ export default function useJsonFetch(){
         return await req.json();
     }
 
-    const jsonPost = async (url: string, body: any) => {
+    const jsonPost = async (url: string, body: any, method: "POST" | "PUT" = "POST") => {
 
         var formData = new FormData();
+
+        formData.append("_method", method);
 
         for ( var key in body ) {
             formData.append(key, body[key]);
