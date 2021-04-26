@@ -22,7 +22,7 @@ Eindproduct:
 | Vue Router 4 | https://next.router.vuejs.org/ | Routing
 | TailwindCSS | https://tailwindcss.com/ | Styling
 
-## Hoe krijg ik het aan de praat
+## Hoe krijg ik het aan de praat?
 ```bash
 git clone git@github.com:apostledev/assignment-vue.git
 cd assignment-vue
