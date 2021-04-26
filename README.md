@@ -22,8 +22,6 @@ Eindproduct:
 | Vue Router 4 | https://next.router.vuejs.org/ | Routing
 | TailwindCSS | https://tailwindcss.com/ | Styling
 
-<br/>
-
 ## Hoe krijg ik het aan de praat
 ```bash
 git clone git@github.com:apostledev/assignment-vue.git
